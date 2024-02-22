@@ -15,6 +15,9 @@ public class CharacterMovementController : MonoBehaviour
     private float movementSpeed = 50f;
     private float rotationSpeed = 720f;
 
+    private static int isMovingId = Animator.StringToHash("isMoving");
+    private static int isRunningId = Animator.StringToHash("isRunning");
+
 
     private void Awake()
     {
@@ -39,13 +42,19 @@ public class CharacterMovementController : MonoBehaviour
         var cameraRotation = Quaternion.Euler(Vector3.up * _camera.transform.eulerAngles.y);
         Vector3 movement = cameraRotation * (new Vector3(inputManager.horizontal, 0 , inputManager.vertical) * movementSpeed * Time.deltaTime);
         Quaternion dest = transform.rotation;
-        if (movement != Vector3.zero)
+
+        bool isMoving = movement != Vector3.zero;
+        if (isMoving)
         {
             direction = movement.normalized;
             dest = Quaternion.LookRotation(direction, transform.up);
         }
         
-        _rigidbody.MovePosition(transform.position + movement);   
+        //_rigidbody.MovePosition(transform.position + movement);
+        _animator.SetBool(isMovingId, isMoving);
+
+        bool isRunning = inputManager.isShiftDown;
+        _animator.SetBool(isRunningId, isRunning);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, dest, rotationSpeed * Time.deltaTime);
     }
 }
