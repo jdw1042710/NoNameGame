@@ -8,7 +8,7 @@ public class InputManager : MonoBehaviour
 
     [System.NonSerialized] public float horizontal = 0f;
     [System.NonSerialized] public float vertical = 0f;
-    [System.NonSerialized] public bool isShiftDown = false;
+    public bool isShiftDown = false;
 
 
     [System.NonSerialized] public float mouseHorizontal = 0f;
@@ -39,7 +39,7 @@ public class InputManager : MonoBehaviour
     {
         SetHorizontal();
         SetVertical();
-        isShiftDown = Input.GetKey(KeyCode.LeftShift | KeyCode.RightShift);
+        isShiftDown = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
     }
 
     private void SetHorizontal()
