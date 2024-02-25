@@ -8,7 +8,8 @@ public class InputManager : MonoBehaviour
 
     [System.NonSerialized] public float horizontal = 0f;
     [System.NonSerialized] public float vertical = 0f;
-    public bool isShiftDown = false;
+    [System.NonSerialized] public bool isHoldingShift = false;
+    [System.NonSerialized] public bool isMouseLeftClicked = false;
 
 
     [System.NonSerialized] public float mouseHorizontal = 0f;
@@ -33,13 +34,14 @@ public class InputManager : MonoBehaviour
     private void Update()
     {
         SetMouseHorizontalAndVertial();
+        isMouseLeftClicked = Input.GetMouseButtonDown(0);
     }
 
     private void FixedUpdate()
     {
         SetHorizontal();
         SetVertical();
-        isShiftDown = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        isHoldingShift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
     }
 
     private void SetHorizontal()

@@ -15,8 +15,8 @@ public class CharacterMovementController : MonoBehaviour
     private float movementSpeed = 50f;
     private float rotationSpeed = 720f;
 
-    private static int isMovingId = Animator.StringToHash("isMoving");
-    private static int isRunningId = Animator.StringToHash("isRunning");
+    private readonly int isMovingId = Animator.StringToHash("isMoving");
+    private readonly int isRunningId = Animator.StringToHash("isRunning");
 
 
     private void Awake()
@@ -53,7 +53,7 @@ public class CharacterMovementController : MonoBehaviour
         //_rigidbody.MovePosition(transform.position + movement);
         _animator.SetBool(isMovingId, isMoving);
 
-        bool isRunning = inputManager.isShiftDown;
+        bool isRunning = inputManager.isHoldingShift;
         _animator.SetBool(isRunningId, isRunning);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, dest, rotationSpeed * Time.deltaTime);
     }
