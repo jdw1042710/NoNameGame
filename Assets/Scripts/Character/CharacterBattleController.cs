@@ -55,9 +55,11 @@ public class CharacterBattleController : MonoBehaviour
         Attack();
     }
 
+
+    // Called By Animation Event
     private void OnCheckAttackCombo()
     {
-        Debug.Log("Check Combo");
+        //Debug.Log("Check Combo");
         if (nextComboFlag)
         {
             nextComboFlag = false;
@@ -70,11 +72,14 @@ public class CharacterBattleController : MonoBehaviour
         }
     }
 
+    // Called By Animation Event
+
     private void FinishAttack()
     {
-        Debug.Log("Finish");
         isAttacking = false;
     }
+
+    // Called By Animation Event
 
     private void ResetAttackState()
     {
