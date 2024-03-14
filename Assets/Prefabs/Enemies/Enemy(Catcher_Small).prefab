@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6974811411281439013, guid: 007f5446a218b1f49919767f8c1ce4ab, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 7122db09428d8d149827cf7b2debf93a, type: 2}
     - target: {fileID: 7076029219765752721, guid: 007f5446a218b1f49919767f8c1ce4ab, type: 3}
       propertyPath: m_Name
       value: Enemy(Catcher_Small)
@@ -64,7 +68,13 @@ PrefabInstance:
       addedObject: {fileID: 6777225820516476654}
     - targetCorrespondingSourceObject: {fileID: 7076029219765752721, guid: 007f5446a218b1f49919767f8c1ce4ab, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 3433479043169201876}
+    - targetCorrespondingSourceObject: {fileID: 7076029219765752721, guid: 007f5446a218b1f49919767f8c1ce4ab, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 2138385486250787005}
+    - targetCorrespondingSourceObject: {fileID: 7076029219765752721, guid: 007f5446a218b1f49919767f8c1ce4ab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4993440959143604425}
     - targetCorrespondingSourceObject: {fileID: 7076029219765752721, guid: 007f5446a218b1f49919767f8c1ce4ab, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7284554750818262824}
@@ -124,6 +134,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!95 &3433479043169201876
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417231878906721492}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: b181abd3545fe7545bfd8726fbb52024, type: 3}
+  m_Controller: {fileID: 9100000, guid: 610f23b73c04b5346a9ddd034d852109, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &2138385486250787005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,6 +177,18 @@ MonoBehaviour:
   _timeBetweenAttacks: 5
   _sightRange: 10
   _attackRange: 3
+--- !u!114 &4993440959143604425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417231878906721492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aafadcafbc82be4ab4ee6d3e7374a8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!195 &7284554750818262824
 NavMeshAgent:
   m_ObjectHideFlags: 0

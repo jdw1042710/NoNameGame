@@ -6,21 +6,15 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
-    enum EnemyState
-    {
-        Idle,
-        Patrol,
-        Chase,
-        Missing,
-        Attack,
-    }
-
 
     private NavMeshAgent _agent;
+    private EnemyAnimationController _animationController;
     private Transform _player;
     [SerializeField] private LayerMask _groundMask, _playerMask;
 
-    EnemyState _currentState;
+    public EnemyState currentState { get; private set; }
+    public bool isMoving {  get; private set; }
+    public float angleWithPlayer { get; private set; }
 
     //Patroling
     private Vector3 _patrolPoint;
@@ -45,6 +39,7 @@ public class EnemyController : MonoBehaviour
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _animationController = GetComponent<EnemyAnimationController>();
     }
 
     private void Start()
@@ -57,7 +52,7 @@ public class EnemyController : MonoBehaviour
         CheckCondition();
         SwitchState();
 
-        switch (_currentState)
+        switch (currentState)
         {
             case EnemyState.Patrol:
                 Patrol();
@@ -66,7 +61,7 @@ public class EnemyController : MonoBehaviour
                 Chase();
                 break;
             case EnemyState.Missing:
-                MissThePlayer();
+                FindPlayerInLastPosition();
                 break;
             case EnemyState.Attack:
                 Attack();
@@ -79,43 +74,46 @@ public class EnemyController : MonoBehaviour
     private void CheckCondition()
     {
         Vector3 playerDir = (_player.position - transform.position);
-        float angleWithPlayer = Vector3.Dot(transform.forward, playerDir.normalized);
+        angleWithPlayer = Vector3.Dot(transform.forward, playerDir.normalized);
         bool isPlayerInViewingAngle = angleWithPlayer > 0.7f;
         _isPlayerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _playerMask)&& isPlayerInViewingAngle;
         _isPlayerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, _playerMask)&& isPlayerInViewingAngle;
 
+        isMoving = _agent.velocity.sqrMagnitude > 0.1f;
+
+        //for debugging
         Debug.DrawLine(transform.position, transform.position + transform.forward * _sightRange, Color.red);
         Debug.DrawLine(transform.position, transform.position + playerDir, Color.magenta);
     }
 
     private void SwitchState()
     {
-        var _previousState = _currentState;
+        var _previousState = currentState;
         if (!_isPlayerInSightRange && ! _isPlayerInAttackRange)
         {
-            _currentState = EnemyState.Patrol;
+            currentState = EnemyState.Patrol;
         }
 
         if (!_isPlayerInSightRange && _isChasing)
         {
-            _currentState = EnemyState.Missing;
+            currentState = EnemyState.Missing;
         }
 
         if(_isPlayerInSightRange && !_isPlayerInAttackRange)
         {
-            _currentState = EnemyState.Chase;
+            currentState = EnemyState.Chase;
             _isChasing = true;
             _missingTime = 0;
         }
 
         if(_isPlayerInAttackRange)
         {
-            _currentState = EnemyState.Attack;
+            currentState = EnemyState.Attack;
         }
 
-        if(_previousState != _currentState)
+        if(_previousState != currentState)
         {
-            Debug.Log($"{_currentState}");
+            Debug.Log($"{currentState}");
         }
     }
 
@@ -130,9 +128,11 @@ public class EnemyController : MonoBehaviour
             _agent.SetDestination(_patrolPoint);
 
             Vector3 distanceToPatrolPoint = transform.position - _patrolPoint;
-            if (distanceToPatrolPoint.magnitude < 1f)
+
+            // patrol point에 도착한 경우 새로운 patrol point를 지정해야함
+            if (distanceToPatrolPoint.sqrMagnitude < 1f)
             {
-                _isSetPatrolPoint = true;
+                _isSetPatrolPoint = false;
             }
         }
     }
@@ -145,6 +145,8 @@ public class EnemyController : MonoBehaviour
         _patrolPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
 
         _isSetPatrolPoint = Physics.Raycast(_patrolPoint, -transform.up, 2f, _groundMask);
+
+        Debug.Log($"{_patrolPoint}");
     }
 
     private void Chase()
@@ -153,14 +155,18 @@ public class EnemyController : MonoBehaviour
         _agent.SetDestination(_lastPlayerPosition);
     }
 
-    private void MissThePlayer()
+    private void FindPlayerInLastPosition()
     {
-        if((transform.position - _lastPlayerPosition).magnitude > 1) return;
-        _missingTime += Time.deltaTime;
-        if( _missingTime > 5.0f )
+        bool isArrivedMissingPoint = (transform.position - _lastPlayerPosition).sqrMagnitude < 1;
+        // bool isArrivedMissingPoint = _agent.velocity.magnitude < 1;
+        if (isArrivedMissingPoint)
         {
-            _isChasing = false;
-            _missingTime = 0;
+            _missingTime += Time.deltaTime;
+            if (_missingTime > 5.0f)
+            {
+                _isChasing = false;
+                _missingTime = 0;
+            }
         }
     }
 
@@ -172,7 +178,8 @@ public class EnemyController : MonoBehaviour
         if (!_isAlreadyAttacked)
         {
             //AttackAnimation
-            Debug.Log("Swipe!");
+            _animationController.PlayAttackAnimation();
+            //Debug.Log("Swipe!");
             StartCoroutine(CoolDownCoroutine());
         }
     }
